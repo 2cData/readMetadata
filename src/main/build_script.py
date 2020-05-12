@@ -34,7 +34,6 @@ class Build_Script():
 
         return ''
 
-    # https://matthew-brett.github.io/teaching/string_formatting.html
     def build_sql_script(self):
         # This is not building a large string, so readability is more important to me than performance
         table = self.extract_table_metadata()
@@ -42,7 +41,6 @@ class Build_Script():
         table_name = table.get(constant.TABLE_NAME_COLUMN_NM)
 
         sql = "CREATE OR REPLACE TABLE " + database_name + "." + table_name + "(\n"
-
 
         column = self.extract_column_metadata()
         for index in column.index:
@@ -105,9 +103,9 @@ class Build_Script():
     def extract_admin_commands(self):
         try:
             with open(self.path) as file:
-                df = pd.io.json_normalize(yaml.load(file))
+                file = yaml.load(file, Loader=yaml.FullLoader)
 
-            return df.to_dict(orient='index')
+            return file.get('engine')
         except Exception:
             msg = "Error occurred in extract_admin_commands for: {}".format(self.path)
             logging.exception(msg)
