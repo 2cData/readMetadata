@@ -9,20 +9,8 @@ from main.log import CustomLogger
 
 logging.setLoggerClass(CustomLogger)
 
-'''
-create or replace table emp_basic (
-first_name string ,
-last_name string ,
-email string ,
-streetaddress string ,
-city string ,
-start_date date
-);
-'''
-
 
 class Build_Script():
-
     path = ''
 
     def __init__(self, path):

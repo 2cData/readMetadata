@@ -6,6 +6,7 @@ from main.build_script import Build_Script as obj
 VALID_METADATA_PATH = r'/Users/david.callaghan/PycharmProjects/readMetadata/dropzone/MetadataWorkbook_sample.xlsx'
 VALID_ADMIN_PATH = r'/Users/david.callaghan/PycharmProjects/readMetadata/dropzone/permissions_dev.yaml'
 
+
 class Test_Build_Script(unittest.TestCase):
 
     def test_extract_table_metadata(self):
@@ -110,3 +111,8 @@ purchased TIMESTAMP NOT NULL);"""
         sql = obj(VALID_METADATA_PATH).build_sql_script()
 
         self.assertAlmostEquals(sql, target)
+
+    def test_extract_table_metadata(self):
+        res = obj(VALID_ADMIN_PATH).extract_admin_commands()
+        role = res.get('role')[0]
+        self.assertEqual(role, "CREATE ROLE dev_role COMMENT='This is the developer role'")

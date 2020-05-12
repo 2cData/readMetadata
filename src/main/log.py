@@ -4,7 +4,6 @@ from logging import Logger
 from logging.handlers import TimedRotatingFileHandler
 
 
-# https://gist.github.com/nguyenkims/e92df0f8bd49973f0c94bddf36ed7fd0
 class CustomLogger(Logger):
 
     def __init__(
