@@ -24,7 +24,7 @@ class Test_Build_Script(unittest.TestCase):
 
     def test_extract_table_metadata_missing_file(self):
         with self.assertRaises(Exception):
-            obj('VALID_XLS_PATH').extract_table_metadata()
+            obj('VALID_METADATA_PATH').extract_table_metadata()
 
     def test_extract_column_metadata(self):
         res = obj(VALID_METADATA_PATH).extract_column_metadata()
@@ -34,3 +34,67 @@ class Test_Build_Script(unittest.TestCase):
         self.assertEqual(res[constant.COLUMN_POSITION_NM].iloc[0], 1)
         self.assertEqual(res[constant.COLUMN_SIZE_NM].iloc[0], 255)
         self.assertEqual(res[constant.COLUMN_REQUIRED_NM].iloc[0], 'Yes')
+
+    def test_extract_column_metadata_invalid_name(self):
+        res = obj(VALID_METADATA_PATH).extract_column_metadata()
+        self.assertNotEqual(res[constant.COLUMN_NAME_NM].iloc[0], '')
+        self.assertEqual(res[constant.COLUMN_DESCRIPTION_NM].iloc[0], 'unique id')
+        self.assertEqual(res[constant.COLUMN_TYPE_NM].iloc[0], 'INT')
+        self.assertEqual(res[constant.COLUMN_POSITION_NM].iloc[0], 1)
+        self.assertEqual(res[constant.COLUMN_SIZE_NM].iloc[0], 255)
+        self.assertEqual(res[constant.COLUMN_REQUIRED_NM].iloc[0], 'Yes')
+
+    def test_extract_column_metadata_invalid_description(self):
+        res = obj(VALID_METADATA_PATH).extract_column_metadata()
+        self.assertEqual(res[constant.COLUMN_NAME_NM].iloc[0], 'id')
+        self.assertNotEqual(res[constant.COLUMN_DESCRIPTION_NM].iloc[0], '')
+        self.assertEqual(res[constant.COLUMN_TYPE_NM].iloc[0], 'INT')
+        self.assertEqual(res[constant.COLUMN_POSITION_NM].iloc[0], 1)
+        self.assertEqual(res[constant.COLUMN_SIZE_NM].iloc[0], 255)
+        self.assertEqual(res[constant.COLUMN_REQUIRED_NM].iloc[0], 'Yes')
+
+    def test_extract_column_metadata_invalid_type(self):
+        res = obj(VALID_METADATA_PATH).extract_column_metadata()
+        self.assertEqual(res[constant.COLUMN_NAME_NM].iloc[0], 'id')
+        self.assertEqual(res[constant.COLUMN_DESCRIPTION_NM].iloc[0], 'unique id')
+        self.assertNotEqual(res[constant.COLUMN_TYPE_NM].iloc[0], '')
+        self.assertEqual(res[constant.COLUMN_POSITION_NM].iloc[0], 1)
+        self.assertEqual(res[constant.COLUMN_SIZE_NM].iloc[0], 255)
+        self.assertEqual(res[constant.COLUMN_REQUIRED_NM].iloc[0], 'Yes')
+
+    def test_extract_column_metadata_invalid_position(self):
+        res = obj(VALID_METADATA_PATH).extract_column_metadata()
+        self.assertEqual(res[constant.COLUMN_NAME_NM].iloc[0], 'id')
+        self.assertEqual(res[constant.COLUMN_DESCRIPTION_NM].iloc[0], 'unique id')
+        self.assertEqual(res[constant.COLUMN_TYPE_NM].iloc[0], 'INT')
+        self.assertNotEqual(res[constant.COLUMN_POSITION_NM].iloc[0], 0)
+        self.assertEqual(res[constant.COLUMN_SIZE_NM].iloc[0], 255)
+        self.assertEqual(res[constant.COLUMN_REQUIRED_NM].iloc[0], 'Yes')
+
+    def test_extract_column_metadata_invalid_size(self):
+        res = obj(VALID_METADATA_PATH).extract_column_metadata()
+        self.assertEqual(res[constant.COLUMN_NAME_NM].iloc[0], 'id')
+        self.assertEqual(res[constant.COLUMN_DESCRIPTION_NM].iloc[0], 'unique id')
+        self.assertEqual(res[constant.COLUMN_TYPE_NM].iloc[0], 'INT')
+        self.assertEqual(res[constant.COLUMN_POSITION_NM].iloc[0], 1)
+        self.assertNotEqual(res[constant.COLUMN_SIZE_NM].iloc[0], 0)
+        self.assertEqual(res[constant.COLUMN_REQUIRED_NM].iloc[0], 'Yes')
+
+    def test_extract_column_metadata_invalid_required(self):
+        res = obj(VALID_METADATA_PATH).extract_column_metadata()
+
+        self.assertEqual(res[constant.COLUMN_NAME_NM].iloc[0], 'id')
+        self.assertEqual(res[constant.COLUMN_DESCRIPTION_NM].iloc[0], 'unique id')
+        self.assertEqual(res[constant.COLUMN_TYPE_NM].iloc[0], 'INT')
+        self.assertEqual(res[constant.COLUMN_POSITION_NM].iloc[0], 1)
+        self.assertEqual(res[constant.COLUMN_SIZE_NM].iloc[0], 255)
+        self.assertNotEqual(res[constant.COLUMN_REQUIRED_NM].iloc[0], 'No')
+
+    def test_extract_column_metadata_missing_file(self):
+        with self.assertRaises(Exception):
+            obj('VALID_METADATA_PATH').extract_column_metadata()
+
+    def test_extract_column_metadata_size(self):
+        res = obj(VALID_METADATA_PATH).extract_column_metadata()
+        self.assertEqual(res.shape[0], 4)
+        self.assertEqual(res.shape[1], 6)
