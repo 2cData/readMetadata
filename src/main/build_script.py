@@ -22,6 +22,7 @@ start_date date
 
 
 class Build_Script():
+
     path = ''
 
     def __init__(self, path):
@@ -40,6 +41,7 @@ class Build_Script():
         return ''
 
     def extract_table_metadata(self):
+
         try:
             df = pd.read_excel(self.path,
                                skiprows=constant.SKIP_DATABASE_ROWS,
@@ -63,13 +65,12 @@ class Build_Script():
 
     def extract_column_metadata(self):
         try:
-            df = pd.read_excel(self.path,
-                               skiprows=constant.SKIP_COLUMN_ROWS,
-                               header=0,
-                               usecols=list(range(6)),
-                               sheet_name=constant.SHEET_NAME)
+            return pd.read_excel(self.path,
+                                 skiprows=constant.SKIP_COLUMN_ROWS,
+                                 header=0,
+                                 usecols=list(range(6)),
+                                 sheet_name=constant.SHEET_NAME)
 
-            return df.to_dict(orient='index')
         except Exception:
             msg = "Error occurred in extract_table_metadata for: {}".format(self.path)
             logging.exception(msg)
