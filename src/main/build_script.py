@@ -34,11 +34,38 @@ class Build_Script():
 
         return ''
 
+    # https://matthew-brett.github.io/teaching/string_formatting.html
     def build_sql_script(self):
+        # This is not building a large string, so readability is more important to me than performance
         table = self.extract_table_metadata()
-        column = self.extract_column_metadata()
+        database_name = table.get(constant.DATABASE_NAMES_COLUMN_NM)
+        table_name = table.get(constant.TABLE_NAME_COLUMN_NM)
 
-        return ''
+        sql = "CREATE OR REPLACE TABLE " + database_name + "." + table_name + "(\n"
+
+
+        column = self.extract_column_metadata()
+        for index in column.index:
+            sql = sql + column[constant.COLUMN_NAME_NM][index]
+            sql = sql + ' '
+            sql = sql + column[constant.COLUMN_TYPE_NM][index]
+
+            size = str(column[constant.COLUMN_SIZE_NM][index])
+            if size != 'nan':
+                sql = sql + '(' + size
+                sql = sql[:-2]
+                sql = sql + ')'
+
+            required = column[constant.COLUMN_REQUIRED_NM][index]
+            if len(required) > 0:
+                sql = sql + ' NOT NULL'
+
+            sql = sql + ',\n'
+
+        sql = sql[:-2]
+        sql = sql + ');'
+
+        return sql
 
     def extract_table_metadata(self):
 
@@ -70,7 +97,6 @@ class Build_Script():
                                  header=0,
                                  usecols=list(range(6)),
                                  sheet_name=constant.SHEET_NAME)
-
         except Exception:
             msg = "Error occurred in extract_table_metadata for: {}".format(self.path)
             logging.exception(msg)

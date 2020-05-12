@@ -7,6 +7,7 @@ VALID_METADATA_PATH = r'/Users/david.callaghan/PycharmProjects/readMetadata/drop
 VALID_ADMIN_PATH = r'/Users/david.callaghan/PycharmProjects/readMetadata/dropzone/permissions_dev.yaml'
 
 class Test_Build_Script(unittest.TestCase):
+
     def test_extract_table_metadata(self):
         res = obj(VALID_METADATA_PATH).extract_table_metadata()
         self.assertEqual(res.get(constant.DATABASE_NAMES_COLUMN_NM), 'sales')
@@ -98,3 +99,14 @@ class Test_Build_Script(unittest.TestCase):
         res = obj(VALID_METADATA_PATH).extract_column_metadata()
         self.assertEqual(res.shape[0], 4)
         self.assertEqual(res.shape[1], 6)
+
+    def test_build_sql_script(self):
+        target = """CREATE OR REPLACE TABLE sales.test(
+id INT(255) NOT NULL,
+product VARCHAR(125) NOT NULL,
+price DECIMAL NOT NULL,
+purchased TIMESTAMP NOT NULL);"""
+
+        sql = obj(VALID_METADATA_PATH).build_sql_script()
+
+        self.assertAlmostEquals(sql, target)
