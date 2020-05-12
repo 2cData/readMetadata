@@ -1,9 +1,11 @@
+import logging
+import pathlib
+
 import pandas as pd
 import yaml
-import pathlib
-import logging
-from main.log import CustomLogger
+
 import main.constant as constant
+from main.log import CustomLogger
 
 logging.setLoggerClass(CustomLogger)
 
@@ -17,14 +19,21 @@ city string ,
 start_date date
 );
 '''
-class ReadFile():
+
+
+class Build_Script():
     path = ''
 
     def __init__(self, path):
         self.path = path
         self._file_exists()
 
-    def build_sql(self):
+    def build_admin_script(self):
+        admin = self.extract_admin_commands()
+
+        return ''
+
+    def build_sql_script(self):
         table = self.extract_table_metadata()
         column = self.extract_column_metadata()
 
@@ -52,8 +61,6 @@ class ReadFile():
             logging.exception(msg)
             raise Exception(msg)
 
-    #df = pd.read_excel('/Users/david.callaghan/PycharmProjects/readMetadata/dropzone/MetadataWorkbook_sample.xlsx',
-     #                  skiprows=45, header=0, usecols=list(range(6)), sheet_name='Metadata')
     def extract_column_metadata(self):
         try:
             df = pd.read_excel(self.path,
