@@ -1,0 +1,7 @@
+engine:
+  profiles: dev
+  environment: dev, test
+  role:
+    - CREATE ROLE dev_role COMMENT='This is the developer role'
+  grant:
+    - grant select on all tables in schema mydb.devschema to role dev_role

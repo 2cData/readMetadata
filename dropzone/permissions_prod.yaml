@@ -1,0 +1,7 @@
+engine:
+  profiles: prod
+  environment: qa,prod
+  role:
+    - CREATE ROLE prod_role COMMENT='This is the Prod role'
+  grant:
+    - grant select on all tables in schema mydb.prodschema to role prod_role
